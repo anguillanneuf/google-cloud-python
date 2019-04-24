@@ -32,6 +32,7 @@ dependencies = [
     'google-api-core >= 1.6.0, < 2.0.0dev',
     'google-cloud-core >= 0.29.0, < 0.30dev',
     'google-resumable-media >= 0.3.1',
+    'google-auth >= 1.2.0',
 ]
 extras = {
 }
