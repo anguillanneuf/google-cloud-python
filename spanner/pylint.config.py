@@ -23,9 +23,9 @@ from gcp_devrel.tools import pylint
 # library_additions = {}
 # Ignore generated code
 library_replacements = copy.deepcopy(pylint.DEFAULT_LIBRARY_RC_REPLACEMENTS)
-library_replacements['MASTER']['ignore'].append('spanner_v1')
-library_replacements['MASTER']['ignore'].append('spanner_admin_instance_v1')
-library_replacements['MASTER']['ignore'].append('spanner_admin_database_v1')
+library_replacements["MASTER"]["ignore"].append("spanner_v1")
+library_replacements["MASTER"]["ignore"].append("spanner_admin_instance_v1")
+library_replacements["MASTER"]["ignore"].append("spanner_admin_database_v1")
 
 # Test configuration
 

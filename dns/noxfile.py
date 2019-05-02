@@ -19,10 +19,7 @@ import os
 import nox
 
 
-LOCAL_DEPS = (
-    os.path.join('..', 'api_core'),
-    os.path.join('..', 'core'),
-)
+LOCAL_DEPS = (os.path.join("..", "api_core"), os.path.join("..", "core"))
 
 
 @nox.session(python="3.7")
@@ -32,13 +29,7 @@ def lint(session):
     serious code quality issues.
     """
     session.install("flake8", "black", *LOCAL_DEPS)
-    session.run(
-        "black",
-        "--check",
-        "google",
-        "tests",
-        "docs",
-    )
+    session.run("black", "--check", "google", "tests", "docs")
     session.run("flake8", "google", "tests")
 
 
@@ -48,20 +39,14 @@ def blacken(session):
     Format code to uniform standard.
     """
     session.install("black")
-    session.run(
-        "black",
-        "google",
-        "tests",
-        "docs",
-    )
+    session.run("black", "google", "tests", "docs")
 
 
-@nox.session(python='3.6')
+@nox.session(python="3.6")
 def lint_setup_py(session):
     """Verify that setup.py is valid (including RST check)."""
-    session.install('docutils', 'Pygments')
-    session.run(
-        'python', 'setup.py', 'check', '--restructuredtext', '--strict')
+    session.install("docutils", "Pygments")
+    session.run("python", "setup.py", "check", "--restructuredtext", "--strict")
 
 
 def default(session):
@@ -73,39 +58,39 @@ def default(session):
     run the tests.
     """
     # Install all test dependencies, then install local packages in-place.
-    session.install('mock', 'pytest', 'pytest-cov')
+    session.install("mock", "pytest", "pytest-cov")
     for local_dep in LOCAL_DEPS:
-        session.install('-e', local_dep)
-    session.install('-e', '.')
+        session.install("-e", local_dep)
+    session.install("-e", ".")
 
     # Run py.test against the unit tests.
     session.run(
-        'py.test',
-        '--quiet',
-        '--cov=google.cloud.dns',
-        '--cov=tests.unit',
-        '--cov-append',
-        '--cov-config=.coveragerc',
-        '--cov-report=',
-        '--cov-fail-under=97',
-        'tests/unit',
+        "py.test",
+        "--quiet",
+        "--cov=google.cloud.dns",
+        "--cov=tests.unit",
+        "--cov-append",
+        "--cov-config=.coveragerc",
+        "--cov-report=",
+        "--cov-fail-under=97",
+        "tests/unit",
     )
 
 
-@nox.session(python=['2.7', '3.5', '3.6', '3.7'])
+@nox.session(python=["2.7", "3.5", "3.6", "3.7"])
 def unit(session):
     """Run the unit test suite."""
 
     default(session)
 
 
-@nox.session(python='3.6')
+@nox.session(python="3.6")
 def cover(session):
     """Run the final coverage report.
 
     This outputs the coverage report aggregating coverage from the unit
     test runs (not system test runs), and then erases coverage data.
     """
-    session.install('coverage', 'pytest-cov')
-    session.run('coverage', 'report', '--show-missing', '--fail-under=100')
-    session.run('coverage', 'erase')
+    session.install("coverage", "pytest-cov")
+    session.run("coverage", "report", "--show-missing", "--fail-under=100")
+    session.run("coverage", "erase")

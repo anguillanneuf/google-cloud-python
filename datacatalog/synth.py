@@ -19,28 +19,28 @@ from synthtool import gcp
 
 gapic = gcp.GAPICGenerator()
 common = gcp.CommonTemplates()
-version = 'v1beta1'
+version = "v1beta1"
 
 # ----------------------------------------------------------------------------
 # Generate datacatalog GAPIC layer
 # ----------------------------------------------------------------------------
 library = gapic.py_library(
-    'datacatalog',
+    "datacatalog",
     version,
-    config_path='/google/cloud/datacatalog/artman_datacatalog_v1beta1.yaml',
-    artman_output_name='datacatalog-v1beta1',
+    config_path="/google/cloud/datacatalog/artman_datacatalog_v1beta1.yaml",
+    artman_output_name="datacatalog-v1beta1",
 )
 
 s.move(
     library,
     excludes=[
-        'docs/conf.py',
-        'docs/index.rst',
-        'google/cloud/datacatalog_v1beta1/__init__.py',
-        'README.rst',
-        'nox*.py',
-        'setup.py',
-        'setup.cfg',
+        "docs/conf.py",
+        "docs/index.rst",
+        "google/cloud/datacatalog_v1beta1/__init__.py",
+        "README.rst",
+        "nox*.py",
+        "setup.py",
+        "setup.cfg",
     ],
 )
 

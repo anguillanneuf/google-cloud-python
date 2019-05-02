@@ -23,8 +23,8 @@ from gcp_devrel.tools import pylint
 # library_additions = {}
 # Ignore generated code
 library_replacements = copy.deepcopy(pylint.DEFAULT_LIBRARY_RC_REPLACEMENTS)
-library_replacements['MASTER']['ignore'].append('gapic')
-library_replacements['MASTER']['ignore'].append('proto')
+library_replacements["MASTER"]["ignore"].append("gapic")
+library_replacements["MASTER"]["ignore"].append("proto")
 
 # Test configuration
 

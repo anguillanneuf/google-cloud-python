@@ -210,6 +210,7 @@ class StreamingPullManager(object):
 
     def maybe_pause_consumer(self):
         """Check the current load and pause the consumer if needed."""
+        _LOGGER.debug("Current load at %.2f", self.load)
         if self.load >= 1.0:
             if self._consumer is not None and not self._consumer.is_paused:
                 _LOGGER.debug("Message backlog over load at %.2f, pausing.", self.load)
@@ -227,6 +228,7 @@ class StreamingPullManager(object):
             return
 
         if self.load < self.flow_control.resume_threshold:
+            _LOGGER.debug("Resuming the stream.")
             self._consumer.resume()
         else:
             _LOGGER.debug("Did not resume, current load is %s", self.load)

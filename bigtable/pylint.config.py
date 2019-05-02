@@ -22,7 +22,7 @@ from gcp_devrel.tools import pylint
 
 # library_additions = {}
 library_replacements = copy.deepcopy(pylint.DEFAULT_LIBRARY_RC_REPLACEMENTS)
-library_replacements['MASTER']['ignore'].append('_generated')
+library_replacements["MASTER"]["ignore"].append("_generated")
 
 # Test configuration
 

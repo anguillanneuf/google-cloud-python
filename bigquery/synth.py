@@ -19,14 +19,13 @@ from synthtool import gcp
 
 gapic = gcp.GAPICGenerator()
 
-version = 'v2'
+version = "v2"
 
 library = gapic.py_library(
-    'bigquery',
+    "bigquery",
     version,
-    config_path='/google/cloud/bigquery/'
-                'artman_bigquery_v2.yaml',
-    artman_output_name='bigquery-v2',
+    config_path="/google/cloud/bigquery/" "artman_bigquery_v2.yaml",
+    artman_output_name="bigquery-v2",
     include_protos=True,
 )
 
@@ -37,7 +36,7 @@ s.move(
         library / "google/cloud/bigquery_v2/proto/location*",
         library / "google/cloud/bigquery_v2/proto/model*",
         library / "google/cloud/bigquery_v2/proto/standard_sql*",
-    ],
+    ]
 )
 
 # Fix up proto docs that are missing summary line.
@@ -49,6 +48,6 @@ s.replace(
 
 # Remove non-ascii characters from docstrings for Python 2.7.
 # Format quoted strings as plain text.
-s.replace("google/cloud/bigquery_v2/proto/*.py", "[“”]", '``')
+s.replace("google/cloud/bigquery_v2/proto/*.py", "[“”]", "``")
 
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)

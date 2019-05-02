@@ -18,10 +18,7 @@ from synthtool import gcp
 
 gapic = gcp.GAPICGenerator()
 common = gcp.CommonTemplates()
-versions = [
-    ("v1beta1", "artman_firestore.yaml"),
-    ("v1", "artman_firestore_v1.yaml"),
-]
+versions = [("v1beta1", "artman_firestore.yaml"), ("v1", "artman_firestore_v1.yaml")]
 
 # ----------------------------------------------------------------------------
 # Generate firestore GAPIC layer

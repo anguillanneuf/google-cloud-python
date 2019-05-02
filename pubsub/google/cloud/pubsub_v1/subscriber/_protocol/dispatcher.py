@@ -51,7 +51,7 @@ class Dispatcher(object):
             )
             # Create and start the helper thread.
             thread = threading.Thread(name=_CALLBACK_WORKER_NAME, target=worker)
-            print('tz Active thread count: {}'.format(threading.active_count()))
+            print("tz Active thread count: {}".format(threading.active_count()))
             thread.daemon = True
             thread.start()
             _LOGGER.debug("Started helper thread %s", thread.name)

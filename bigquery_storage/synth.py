@@ -77,7 +77,8 @@ s.replace(
 
 # The grpc transport channel shouldn't limit the size of a grpc message at the
 # default 4mb.
-s.replace("google/cloud/bigquery_storage_v1beta1/gapic/transports/*_grpc_transport.py",
+s.replace(
+    "google/cloud/bigquery_storage_v1beta1/gapic/transports/*_grpc_transport.py",
     "return google.api_core.grpc_helpers.create_channel\(\n(\s+)address,\n"
     "\s+credentials=.*,\n\s+scopes=.*,\n",
     "\g<0>\g<1>options={\n"

@@ -157,10 +157,11 @@ def test_to_rfc3339_with_non_utc_ignore_zone():
 
 
 class Test_DateTimeWithNanos(object):
-
     @staticmethod
     def test_ctor_wo_nanos():
-        stamp = datetime_helpers.DatetimeWithNanoseconds(2016, 12, 20, 21, 13, 47, 123456)
+        stamp = datetime_helpers.DatetimeWithNanoseconds(
+            2016, 12, 20, 21, 13, 47, 123456
+        )
         assert stamp.year == 2016
         assert stamp.month == 12
         assert stamp.day == 20
@@ -200,7 +201,9 @@ class Test_DateTimeWithNanos(object):
 
     @staticmethod
     def test_rfc3339_wo_nanos():
-        stamp = datetime_helpers.DatetimeWithNanoseconds(2016, 12, 20, 21, 13, 47, 123456)
+        stamp = datetime_helpers.DatetimeWithNanoseconds(
+            2016, 12, 20, 21, 13, 47, 123456
+        )
         assert stamp.rfc3339() == "2016-12-20T21:13:47.123456Z"
 
     @staticmethod
@@ -272,7 +275,8 @@ class Test_DateTimeWithNanos(object):
     @staticmethod
     def test_timestamp_pb_wo_nanos_naive():
         stamp = datetime_helpers.DatetimeWithNanoseconds(
-            2016, 12, 20, 21, 13, 47, 123456)
+            2016, 12, 20, 21, 13, 47, 123456
+        )
         delta = stamp.replace(tzinfo=pytz.UTC) - datetime_helpers._UTC_EPOCH
         seconds = int(delta.total_seconds())
         nanos = 123456000
@@ -286,7 +290,8 @@ class Test_DateTimeWithNanos(object):
         )
         delta = stamp - datetime_helpers._UTC_EPOCH
         timestamp = timestamp_pb2.Timestamp(
-            seconds=int(delta.total_seconds()), nanos=123456789)
+            seconds=int(delta.total_seconds()), nanos=123456789
+        )
         assert stamp.timestamp_pb() == timestamp
 
     @staticmethod
@@ -296,8 +301,7 @@ class Test_DateTimeWithNanos(object):
         seconds = int(delta.total_seconds())
         timestamp = timestamp_pb2.Timestamp(seconds=seconds)
 
-        stamp = datetime_helpers.DatetimeWithNanoseconds.from_timestamp_pb(
-            timestamp)
+        stamp = datetime_helpers.DatetimeWithNanoseconds.from_timestamp_pb(timestamp)
 
         assert _to_seconds(when) == _to_seconds(stamp)
         assert stamp.microsecond == 0
@@ -311,8 +315,7 @@ class Test_DateTimeWithNanos(object):
         seconds = int(delta.total_seconds())
         timestamp = timestamp_pb2.Timestamp(seconds=seconds, nanos=123456789)
 
-        stamp = datetime_helpers.DatetimeWithNanoseconds.from_timestamp_pb(
-            timestamp)
+        stamp = datetime_helpers.DatetimeWithNanoseconds.from_timestamp_pb(timestamp)
 
         assert _to_seconds(when) == _to_seconds(stamp)
         assert stamp.microsecond == 123456

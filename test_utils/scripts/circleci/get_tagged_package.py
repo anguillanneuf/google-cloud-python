@@ -23,19 +23,21 @@ import re
 import sys
 
 
-TAG_RE = re.compile(r"""
+TAG_RE = re.compile(
+    r"""
     ^
     (?P<pkg>
         (([a-z]+)[_-])*)  # pkg-name-with-hyphens-or-underscores (empty allowed)
     ([0-9]+)\.([0-9]+)\.([0-9]+)  # Version x.y.z (x, y, z all ints)
     $
-""", re.VERBOSE)
-TAG_ENV = 'CIRCLE_TAG'
-ERROR_MSG = '%s env. var. not set' % (TAG_ENV,)
-BAD_TAG_MSG = 'Invalid tag name: %s. Expected pkg-name-x.y.z'
+""",
+    re.VERBOSE,
+)
+TAG_ENV = "CIRCLE_TAG"
+ERROR_MSG = "%s env. var. not set" % (TAG_ENV,)
+BAD_TAG_MSG = "Invalid tag name: %s. Expected pkg-name-x.y.z"
 CIRCLE_CI_SCRIPTS_DIR = os.path.dirname(__file__)
-ROOT_DIR = os.path.realpath(
-    os.path.join(CIRCLE_CI_SCRIPTS_DIR, '..', '..', '..'))
+ROOT_DIR = os.path.realpath(os.path.join(CIRCLE_CI_SCRIPTS_DIR, "..", "..", ".."))
 
 
 def main():
@@ -52,13 +54,13 @@ def main():
         print(BAD_TAG_MSG % (tag_name,), file=sys.stderr)
         sys.exit(1)
 
-    pkg_name = match.group('pkg')
+    pkg_name = match.group("pkg")
     if pkg_name is None:
         print(ROOT_DIR)
     else:
-        pkg_dir = pkg_name.rstrip('-').replace('-', '_')
+        pkg_dir = pkg_name.rstrip("-").replace("-", "_")
         print(os.path.join(ROOT_DIR, pkg_dir))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

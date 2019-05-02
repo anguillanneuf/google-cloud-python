@@ -35,10 +35,7 @@ s.move(library / "tests/unit/gapic/v1")
 
 # Issues exist where python files should define the source encoding
 # https://github.com/googleapis/gapic-generator/issues/2097
-s.replace(
-    "google/**/proto/*_pb2.py",
-    r"(^.*$\n)*",
-    r"# -*- coding: utf-8 -*-\n\g<0>")
+s.replace("google/**/proto/*_pb2.py", r"(^.*$\n)*", r"# -*- coding: utf-8 -*-\n\g<0>")
 
 
 # Workaround https://github.com/googleapis/gapic-generator/issues/2449

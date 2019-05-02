@@ -534,7 +534,7 @@ class BackgroundConsumer(object):
                 # In the future, we could use `Condition.wait_for` if we drop
                 # Python 2.7.
                 with self._wake:
-                    if self._paused:
+                    while self._paused:
                         _LOGGER.debug("paused, waiting for waking.")
                         self._wake.wait()
                         _LOGGER.debug("woken.")
@@ -573,7 +573,7 @@ class BackgroundConsumer(object):
             thread = threading.Thread(
                 name=_BIDIRECTIONAL_CONSUMER_NAME,
                 target=self._thread_main,
-                args=(ready,)
+                args=(ready,),
             )
             thread.daemon = True
             thread.start()

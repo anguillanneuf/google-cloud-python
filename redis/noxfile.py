@@ -22,6 +22,7 @@ import nox
 
 LOCAL_DEPS = (os.path.join("..", "api_core"), os.path.join("..", "core"))
 
+
 @nox.session(python="3.7")
 def lint(session):
     """Run linters.
@@ -30,13 +31,7 @@ def lint(session):
     serious code quality issues.
     """
     session.install("flake8", "black", *LOCAL_DEPS)
-    session.run(
-        "black",
-        "--check",
-        "google",
-        "tests",
-        "docs",
-    )
+    session.run("black", "--check", "google", "tests", "docs")
     session.run("flake8", "google", "tests")
 
 
@@ -51,12 +46,7 @@ def blacken(session):
     check the state of the `gcp_ubuntu_config` we use for that Kokoro run.
     """
     session.install("black")
-    session.run(
-        "black",
-        "google",
-        "tests",
-        "docs",
-    )
+    session.run("black", "google", "tests", "docs")
 
 
 @nox.session(python="3.7")

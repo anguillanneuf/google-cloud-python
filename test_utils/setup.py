@@ -24,41 +24,38 @@ PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
 # NOTE: This is duplicated throughout and we should try to
 #       consolidate.
 SETUP_BASE = {
-    'author': 'Google Cloud Platform',
-    'author_email': 'googleapis-publisher@google.com',
-    'scripts': [],
-    'url': 'https://github.com/GoogleCloudPlatform/google-cloud-python',
-    'license': 'Apache 2.0',
-    'platforms': 'Posix; MacOS X; Windows',
-    'include_package_data': True,
-    'zip_safe': False,
-    'classifiers': [
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Apache Software License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Topic :: Internet',
+    "author": "Google Cloud Platform",
+    "author_email": "googleapis-publisher@google.com",
+    "scripts": [],
+    "url": "https://github.com/GoogleCloudPlatform/google-cloud-python",
+    "license": "Apache 2.0",
+    "platforms": "Posix; MacOS X; Windows",
+    "include_package_data": True,
+    "zip_safe": False,
+    "classifiers": [
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Topic :: Internet",
     ],
 }
 
 
-REQUIREMENTS = [
-    'google-auth >= 0.4.0',
-    'six',
-]
+REQUIREMENTS = ["google-auth >= 0.4.0", "six"]
 
 setup(
-    name='google-cloud-testutils',
-    version='0.24.0',
-    description='System test utilities for google-cloud-python',
+    name="google-cloud-testutils",
+    version="0.24.0",
+    description="System test utilities for google-cloud-python",
     packages=find_packages(),
     install_requires=REQUIREMENTS,
-    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*',
+    python_requires=">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*",
     **SETUP_BASE
 )

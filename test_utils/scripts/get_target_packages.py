@@ -21,35 +21,39 @@ import warnings
 
 
 CURRENT_DIR = os.path.realpath(os.path.dirname(__file__))
-BASE_DIR = os.path.realpath(os.path.join(CURRENT_DIR, '..', '..'))
-GITHUB_REPO = os.environ.get('GITHUB_REPO', 'google-cloud-python')
-CI = os.environ.get('CI', '')
-CI_BRANCH = os.environ.get('CIRCLE_BRANCH')
-CI_PR = os.environ.get('CIRCLE_PR_NUMBER')
-CIRCLE_TAG = os.environ.get('CIRCLE_TAG')
-head_hash, head_name = subprocess.check_output(['git', 'show-ref', 'HEAD']
-).strip().decode('ascii').split()
-rev_parse = subprocess.check_output(
-    ['git', 'rev-parse', '--abbrev-ref', 'HEAD']
-).strip().decode('ascii')
-MAJOR_DIV = '#' * 78
-MINOR_DIV = '#' + '-' * 77
+BASE_DIR = os.path.realpath(os.path.join(CURRENT_DIR, "..", ".."))
+GITHUB_REPO = os.environ.get("GITHUB_REPO", "google-cloud-python")
+CI = os.environ.get("CI", "")
+CI_BRANCH = os.environ.get("CIRCLE_BRANCH")
+CI_PR = os.environ.get("CIRCLE_PR_NUMBER")
+CIRCLE_TAG = os.environ.get("CIRCLE_TAG")
+head_hash, head_name = (
+    subprocess.check_output(["git", "show-ref", "HEAD"]).strip().decode("ascii").split()
+)
+rev_parse = (
+    subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    .strip()
+    .decode("ascii")
+)
+MAJOR_DIV = "#" * 78
+MINOR_DIV = "#" + "-" * 77
 
 # NOTE: This reg-ex is copied from ``get_tagged_packages``.
-TAG_RE = re.compile(r"""
+TAG_RE = re.compile(
+    r"""
     ^
     (?P<pkg>
         (([a-z]+)-)*)            # pkg-name-with-hyphens- (empty allowed)
     ([0-9]+)\.([0-9]+)\.([0-9]+)  # Version x.y.z (x, y, z all ints)
     $
-""", re.VERBOSE)
+""",
+    re.VERBOSE,
+)
 
 # This is the current set of dependencies by package.
 # As of this writing, the only "real" dependency is that of error_reporting
 # (on logging), the rest are just system test dependencies.
-PKG_DEPENDENCIES = {
-    'logging': {'pubsub'},
-}
+PKG_DEPENDENCIES = {"logging": {"pubsub"}}
 
 
 def get_baseline():
@@ -67,36 +71,39 @@ def get_baseline():
 
     # If this is a pull request or branch, return the tip for master.
     # We will test only packages which have changed since that point.
-    ci_non_master = (CI == 'true') and any([CI_BRANCH != 'master', CI_PR])
+    ci_non_master = (CI == "true") and any([CI_BRANCH != "master", CI_PR])
 
     if ci_non_master:
 
-        repo_url = 'git@github.com:GoogleCloudPlatform/{}'.format(GITHUB_REPO)
-        subprocess.run(['git', 'remote', 'add', 'baseline', repo_url],
-                        stderr=subprocess.DEVNULL)
-        subprocess.run(['git', 'pull', 'baseline'], stderr=subprocess.DEVNULL)
+        repo_url = "git@github.com:GoogleCloudPlatform/{}".format(GITHUB_REPO)
+        subprocess.run(
+            ["git", "remote", "add", "baseline", repo_url], stderr=subprocess.DEVNULL
+        )
+        subprocess.run(["git", "pull", "baseline"], stderr=subprocess.DEVNULL)
 
         if CI_PR is None and CI_BRANCH is not None:
-            output = subprocess.check_output([
-                'git', 'merge-base', '--fork-point',
-                'baseline/master', CI_BRANCH])
-            return output.strip().decode('ascii')
+            output = subprocess.check_output(
+                ["git", "merge-base", "--fork-point", "baseline/master", CI_BRANCH]
+            )
+            return output.strip().decode("ascii")
 
-        return 'baseline/master'
+        return "baseline/master"
 
     # If environment variables are set identifying what the master tip is,
     # use that.
-    if os.environ.get('GOOGLE_CLOUD_TESTING_REMOTE', ''):
-        remote = os.environ['GOOGLE_CLOUD_TESTING_REMOTE']
-        branch = os.environ.get('GOOGLE_CLOUD_TESTING_BRANCH', 'master')
-        return '%s/%s' % (remote, branch)
+    if os.environ.get("GOOGLE_CLOUD_TESTING_REMOTE", ""):
+        remote = os.environ["GOOGLE_CLOUD_TESTING_REMOTE"]
+        branch = os.environ.get("GOOGLE_CLOUD_TESTING_BRANCH", "master")
+        return "%s/%s" % (remote, branch)
 
     # If we are not in CI and we got this far, issue a warning.
     if not CI:
-        warnings.warn('No baseline could be determined; this means tests '
-                      'will run for every package. If this is local '
-                      'development, set the $GOOGLE_CLOUD_TESTING_REMOTE '
-                      'environment variable.')
+        warnings.warn(
+            "No baseline could be determined; this means tests "
+            "will run for every package. If this is local "
+            "development, set the $GOOGLE_CLOUD_TESTING_REMOTE "
+            "environment variable."
+        )
 
     # That is all we can do; return None.
     return None
@@ -109,18 +116,26 @@ def get_changed_files():
     """
     # Get the baseline, and fail quickly if there is no baseline.
     baseline = get_baseline()
-    print('# Baseline commit: {}'.format(baseline))
+    print("# Baseline commit: {}".format(baseline))
     if not baseline:
         return None
 
     # Return a list of altered files.
     try:
-        return subprocess.check_output([
-            'git', 'diff', '--name-only', '{}..HEAD'.format(baseline),
-        ], stderr=subprocess.DEVNULL).decode('utf8').strip().split('\n')
+        return (
+            subprocess.check_output(
+                ["git", "diff", "--name-only", "{}..HEAD".format(baseline)],
+                stderr=subprocess.DEVNULL,
+            )
+            .decode("utf8")
+            .strip()
+            .split("\n")
+        )
     except subprocess.CalledProcessError:
-        warnings.warn('Unable to perform git diff; falling back to assuming '
-                      'all packages have changed.')
+        warnings.warn(
+            "Unable to perform git diff; falling back to assuming "
+            "all packages have changed."
+        )
         return None
 
 
@@ -155,6 +170,7 @@ def reverse_map(dict_of_sets):
 
     return result
 
+
 def get_changed_packages(file_list):
     """Return a list of changed packages based on the provided file list.
 
@@ -165,7 +181,7 @@ def get_changed_packages(file_list):
     all_packages = set()
     for file_ in os.listdir(BASE_DIR):
         abs_file = os.path.realpath(os.path.join(BASE_DIR, file_))
-        nox_file = os.path.join(abs_file, 'nox.py')
+        nox_file = os.path.join(abs_file, "nox.py")
         if os.path.isdir(abs_file) and os.path.isfile(nox_file):
             all_packages.add(file_)
 
@@ -188,7 +204,7 @@ def get_changed_packages(file_list):
 
         # If there is a change in core, short-circuit now and return
         # everything.
-        if package in ('core',):
+        if package in ("core",):
             return all_packages
 
         # Add the package, as well as any dependencies this package has.
@@ -212,12 +228,12 @@ def get_tagged_package():
     if match is None:
         return
 
-    pkg_name = match.group('pkg')
-    if pkg_name == '':
+    pkg_name = match.group("pkg")
+    if pkg_name == "":
         # NOTE: This corresponds to the "umbrella" tag.
         return
 
-    return pkg_name.rstrip('-').replace('-', '_')
+    return pkg_name.rstrip("-").replace("-", "_")
 
 
 def get_target_packages():
@@ -231,10 +247,10 @@ def get_target_packages():
     if tagged_package is None:
         file_list = get_changed_files()
         print(MAJOR_DIV)
-        print('# Changed files:')
+        print("# Changed files:")
         print(MINOR_DIV)
         for file_ in file_list or ():
-            print('#  {}'.format(file_))
+            print("#  {}".format(file_))
         for package in sorted(get_changed_packages(file_list)):
             yield package
     else:
@@ -243,26 +259,26 @@ def get_target_packages():
 
 def main():
     print(MAJOR_DIV)
-    print('# Environment')
+    print("# Environment")
     print(MINOR_DIV)
-    print('# CircleCI:        {}'.format(CI))
-    print('# CircleCI branch: {}'.format(CI_BRANCH))
-    print('# CircleCI pr:     {}'.format(CI_PR))
-    print('# CircleCI tag:    {}'.format(CIRCLE_TAG))
-    print('# HEAD ref:        {}'.format(head_hash))
-    print('#                  {}'.format(head_name))
-    print('# Git branch:      {}'.format(rev_parse))
+    print("# CircleCI:        {}".format(CI))
+    print("# CircleCI branch: {}".format(CI_BRANCH))
+    print("# CircleCI pr:     {}".format(CI_PR))
+    print("# CircleCI tag:    {}".format(CIRCLE_TAG))
+    print("# HEAD ref:        {}".format(head_hash))
+    print("#                  {}".format(head_name))
+    print("# Git branch:      {}".format(rev_parse))
     print(MAJOR_DIV)
 
     packages = list(get_target_packages())
 
     print(MAJOR_DIV)
-    print('# Target packages:')
+    print("# Target packages:")
     print(MINOR_DIV)
     for package in packages:
-       print(package)
+        print(package)
     print(MAJOR_DIV)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

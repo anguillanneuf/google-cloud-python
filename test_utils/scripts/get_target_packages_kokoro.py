@@ -22,12 +22,12 @@ import ci_diff_helper
 
 def print_environment(environment):
     print("-> CI environment:")
-    print('Branch', environment.branch)
-    print('PR', environment.pr)
-    print('In PR', environment.in_pr)
-    print('Repo URL', environment.repo_url)
+    print("Branch", environment.branch)
+    print("PR", environment.pr)
+    print("In PR", environment.in_pr)
+    print("Repo URL", environment.repo_url)
     if environment.in_pr:
-        print('PR Base', environment.base)
+        print("PR Base", environment.base)
 
 
 def get_base(environment):
@@ -36,19 +36,22 @@ def get_base(environment):
     else:
         # If we're not in a PR, just calculate the changes between this commit
         # and its parent.
-        return 'HEAD~1'
+        return "HEAD~1"
 
 
 def get_changed_files(base):
-    return subprocess.check_output([
-        'git', 'diff', '--name-only', f'{base}..HEAD',
-    ], stderr=subprocess.DEVNULL).decode('utf8').strip().split('\n')
+    return (
+        subprocess.check_output(
+            ["git", "diff", "--name-only", f"{base}..HEAD"], stderr=subprocess.DEVNULL
+        )
+        .decode("utf8")
+        .strip()
+        .split("\n")
+    )
 
 
 def determine_changed_packages(changed_files):
-    packages = [
-        path.parent for path in pathlib.Path('.').glob('*/noxfile.py')
-    ]
+    packages = [path.parent for path in pathlib.Path(".").glob("*/noxfile.py")]
 
     changed_packages = set()
     for file in changed_files:

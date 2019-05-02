@@ -20,27 +20,26 @@ from synthtool import gcp
 gapic = gcp.GAPICGenerator()
 common = gcp.CommonTemplates()
 
-version = 'v1beta1'
+version = "v1beta1"
 
 library = gapic.py_library(
-    'datalabeling',
+    "datalabeling",
     version,
-    config_path='/google/cloud/datalabeling/'
-                'artman_datalabeling_v1beta1.yaml',
-    artman_output_name='datalabeling-v1beta1',
+    config_path="/google/cloud/datalabeling/" "artman_datalabeling_v1beta1.yaml",
+    artman_output_name="datalabeling-v1beta1",
     include_protos=True,
 )
 
 s.move(
     library,
     excludes=[
-        'docs/conf.py',
-        'docs/index.rst',
-        'google/cloud/datalabeling_v1beta1/__init__.py',
-        'README.rst',
-        'nox*.py',
-        'setup.py',
-        'setup.cfg',
+        "docs/conf.py",
+        "docs/index.rst",
+        "google/cloud/datalabeling_v1beta1/__init__.py",
+        "README.rst",
+        "nox*.py",
+        "setup.py",
+        "setup.cfg",
     ],
 )
 

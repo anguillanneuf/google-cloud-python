@@ -32,20 +32,18 @@ from google.cloud.environment_vars import PUBSUB_EMULATOR
 from run_system_test import run_module_tests
 
 
-BIGTABLE = 'bigtable'
-DATASTORE = 'datastore'
-PUBSUB = 'pubsub'
+BIGTABLE = "bigtable"
+DATASTORE = "datastore"
+PUBSUB = "pubsub"
 PACKAGE_INFO = {
     BIGTABLE: (BIGTABLE_EMULATOR,),
     DATASTORE: (GCD_DATASET, GCD_HOST),
     PUBSUB: (PUBSUB_EMULATOR,),
 }
-EXTRA = {
-    DATASTORE: ('--no-legacy',),
-}
-_DS_READY_LINE = '[datastore] Dev App Server is now running.\n'
-_PS_READY_LINE_PREFIX = '[pubsub] INFO: Server started, listening on '
-_BT_READY_LINE_PREFIX = '[bigtable] Cloud Bigtable emulator running on '
+EXTRA = {DATASTORE: ("--no-legacy",)}
+_DS_READY_LINE = "[datastore] Dev App Server is now running.\n"
+_PS_READY_LINE_PREFIX = "[pubsub] INFO: Server started, listening on "
+_BT_READY_LINE_PREFIX = "[bigtable] Cloud Bigtable emulator running on "
 
 
 def get_parser():
@@ -55,10 +53,15 @@ def get_parser():
     :returns: The parser for this script.
     """
     parser = argparse.ArgumentParser(
-        description='Run google-cloud system tests against local emulator.')
-    parser.add_argument('--package', dest='package',
-                        choices=sorted(PACKAGE_INFO.keys()),
-                        default=DATASTORE, help='Package to be tested.')
+        description="Run google-cloud system tests against local emulator."
+    )
+    parser.add_argument(
+        "--package",
+        dest="package",
+        choices=sorted(PACKAGE_INFO.keys()),
+        default=DATASTORE,
+        help="Package to be tested.",
+    )
     return parser
 
 
@@ -71,7 +74,7 @@ def get_start_command(package):
     :rtype: tuple
     :returns: The arguments to be used, in a tuple.
     """
-    result = ('gcloud', 'beta', 'emulators', package, 'start')
+    result = ("gcloud", "beta", "emulators", package, "start")
     extra = EXTRA.get(package, ())
     return result + extra
 
@@ -85,7 +88,7 @@ def get_env_init_command(package):
     :rtype: tuple
     :returns: The arguments to be used, in a tuple.
     """
-    result = ('gcloud', 'beta', 'emulators', package, 'env-init')
+    result = ("gcloud", "beta", "emulators", package, "env-init")
     extra = EXTRA.get(package, ())
     return result + extra
 
@@ -134,7 +137,7 @@ def wait_ready(package, popen):
     elif package == BIGTABLE:
         wait_ready_prefix(popen, _BT_READY_LINE_PREFIX)
     else:
-        raise KeyError('Package not supported', package)
+        raise KeyError("Package not supported", package)
 
 
 def cleanup(pid):
@@ -165,25 +168,29 @@ def run_tests_in_emulator(package):
 
     start_command = get_start_command(package)
     # Ignore stdin and stdout, don't pollute the user's output with them.
-    proc_start = subprocess.Popen(start_command, stdout=subprocess.PIPE,
-                                  stderr=subprocess.PIPE)
+    proc_start = subprocess.Popen(
+        start_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
     try:
         wait_ready(package, proc_start)
         env_init_command = get_env_init_command(package)
-        proc_env = subprocess.Popen(env_init_command, stdout=subprocess.PIPE,
-                                    stderr=subprocess.PIPE)
+        proc_env = subprocess.Popen(
+            env_init_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         env_status = proc_env.wait()
         if env_status != 0:
             raise RuntimeError(env_status, proc_env.stderr.read())
-        env_lines = proc_env.stdout.read().strip().split('\n')
+        env_lines = proc_env.stdout.read().strip().split("\n")
         # Set environment variables before running the system tests.
         for env_var in env_vars:
-            line_prefix = 'export ' + env_var + '='
-            value, = [line.split(line_prefix, 1)[1] for line in env_lines
-                      if line.startswith(line_prefix)]
+            line_prefix = "export " + env_var + "="
+            value, = [
+                line.split(line_prefix, 1)[1]
+                for line in env_lines
+                if line.startswith(line_prefix)
+            ]
             os.environ[env_var] = value
-        run_module_tests(package,
-                         ignore_requirements=True)
+        run_module_tests(package, ignore_requirements=True)
     finally:
         cleanup(proc_start.pid)
 
@@ -195,5 +202,5 @@ def main():
     run_tests_in_emulator(args.package)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

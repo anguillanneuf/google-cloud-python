@@ -21,22 +21,24 @@ gapic = gcp.GAPICGenerator()
 common = gcp.CommonTemplates()
 versions = ["v3beta1"]
 
-excludes = ["setup.py", "nox*.py", "README.rst", "docs/conf.py", "docs/index.rst", 
-            "translation.py"]
+excludes = [
+    "setup.py",
+    "nox*.py",
+    "README.rst",
+    "docs/conf.py",
+    "docs/index.rst",
+    "translation.py",
+]
 
 # ----------------------------------------------------------------------------
 # Generate asset GAPIC layer
 # ----------------------------------------------------------------------------
 for version in versions:
-    library = gapic.py_library(
-        "translate",
-        version,
-        include_protos=True,
-    )
+    library = gapic.py_library("translate", version, include_protos=True)
 
-    #s.move(library / f'google/cloud/translation_{version}', f'google/cloud/translate_{version}', excludes=excludes)
-    s.move(library / f'google/cloud/translate_{version}', excludes=excludes)
-    s.move(library / 'tests')
+    # s.move(library / f'google/cloud/translation_{version}', f'google/cloud/translate_{version}', excludes=excludes)
+    s.move(library / f"google/cloud/translate_{version}", excludes=excludes)
+    s.move(library / "tests")
     s.move(library / f"docs/gapic/{version}")
 
 # translation -> translate
@@ -51,7 +53,8 @@ s.replace(
     r"""record delimiters are ':raw-latex:`\\n`' instead of
           ':raw-latex:`\\r`:raw-latex:`\\n`'.""",
     r"""record delimiters are ``\\\\\\\\n`` instead of
-          ``\\\\\\\\r\\\\\\\\n``.""",)
+          ``\\\\\\\\r\\\\\\\\n``.""",
+)
 # ----------------------------------------------------------------------------
 # Add templated files
 # ----------------------------------------------------------------------------

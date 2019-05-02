@@ -27,7 +27,7 @@ versions = ["v1beta2", "v1"]
 # Generate dataproc GAPIC layer
 # ----------------------------------------------------------------------------
 for version in versions:
-    library = gapic.py_library("dataproc", version, include_protos=True,)
+    library = gapic.py_library("dataproc", version, include_protos=True)
     s.move(library, excludes=["docs/index.rst", "nox.py", "README.rst", "setup.py"])
 
     s.replace(
@@ -57,18 +57,18 @@ for version in versions:
     )
 
     s.replace(
-        f'google/cloud/dataproc_{version}/proto/workflow_templates_pb2.py',
-        ', and must\n\s+conform to the following PCRE regular expression:'
-        '(.*\n)+?.*No more than 32',
-        '. Label values must be between\n'
-        '          1 and 63 characters long. No more than 32'
+        f"google/cloud/dataproc_{version}/proto/workflow_templates_pb2.py",
+        ", and must\n\s+conform to the following PCRE regular expression:"
+        "(.*\n)+?.*No more than 32",
+        ". Label values must be between\n"
+        "          1 and 63 characters long. No more than 32",
     )
     s.replace(
-        f'google/cloud/dataproc_{version}/proto/workflow_templates_pb2.py',
-        ', and must conform to\n'
-        '\s+the following regular expression:(.*\n)+?.* No more than',
-        '. Label values must be between\n'
-        '          1 and 63 characters long. No more than'
+        f"google/cloud/dataproc_{version}/proto/workflow_templates_pb2.py",
+        ", and must conform to\n"
+        "\s+the following regular expression:(.*\n)+?.* No more than",
+        ". Label values must be between\n"
+        "          1 and 63 characters long. No more than",
     )
 
 s.replace(
