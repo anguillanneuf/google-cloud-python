@@ -16,6 +16,7 @@
 
 import logging
 import threading
+import time
 
 from six.moves import queue
 
@@ -539,10 +540,12 @@ class BackgroundConsumer(object):
                         self._wake.wait()
                         _LOGGER.debug("woken.")
 
-                _LOGGER.debug("waiting for recv.")
-                response = self._bidi_rpc.recv()
-                _LOGGER.debug("recved response.")
-                self._on_response(response)
+                time.sleep(.02)
+                if not self._paused:
+                    _LOGGER.debug("waiting for recv.")
+                    response = self._bidi_rpc.recv()
+                    _LOGGER.debug("recved response.")
+                    self._on_response(response)
 
         except exceptions.GoogleAPICallError as exc:
             _LOGGER.debug(
