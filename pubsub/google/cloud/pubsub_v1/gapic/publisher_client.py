@@ -17,6 +17,7 @@
 """Accesses the google.pubsub.v1 Publisher API."""
 
 import collections
+from copy import deepcopy
 import functools
 import pkg_resources
 import warnings
@@ -45,7 +46,7 @@ from google.protobuf import field_mask_pb2
 _GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-pubsub").version
 
 
-def merge_dict(d1, d2):
+def _merge_dict(d1, d2):
     """
     Modifies d1 in-place to contain values from d2.  If any value
     in d1 is a dictionary (or dict-like), *and* the corresponding
@@ -53,12 +54,15 @@ def merge_dict(d1, d2):
     """
     for k,v2 in d2.items():
         v1 = d1.get(k) # returns None if v1 has no value for this key
+        if v1 is None:
+            raise Exception("{} is not recognized by client_config.".format(k))
         if ( isinstance(v1, collections.Mapping) and
              isinstance(v2, collections.Mapping) ):
-            merge_dict(v1, v2)
+            _merge_dict(v1, v2)
         else:
             d1[k] = v2
     return d1
+    
 
 class PublisherClient(object):
     """
@@ -152,11 +156,11 @@ class PublisherClient(object):
                 Generally, you only need to set this if you're developing
                 your own client library.
         """
-        default_client_config = publisher_client_config.config
+        default_client_config = deepcopy(publisher_client_config.config)
         if client_config is None:
             client_config = default_client_config
         else:
-            client_config = merge_dict(default_client_config, client_config)
+            client_config = _merge_dict(default_client_config, client_config)
 
         if channel:
             warnings.warn(
