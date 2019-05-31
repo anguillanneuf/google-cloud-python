@@ -50,7 +50,8 @@ def _merge_dict(d1, d2):
     """
     Modifies d1 in-place to contain values from d2.  If any value
     in d1 is a dictionary (or dict-like), *and* the corresponding
-    value in d2 is also a dictionary, then merge them in-place.
+    value in d2 is also a dictionary, then merge them in-place, i.e. 
+    replacing d1 values with d2 values. 
     """
     for k,v2 in d2.items():
         v1 = d1.get(k) # returns None if v1 has no value for this key
@@ -62,7 +63,7 @@ def _merge_dict(d1, d2):
         else:
             d1[k] = v2
     return d1
-    
+
 
 class PublisherClient(object):
     """
